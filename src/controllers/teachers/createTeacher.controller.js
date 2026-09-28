@@ -2,7 +2,7 @@ const createTeacher = require("../../services/teachers/createTeacher.service");
 
 const createTeacherController = async (req, res, next) => {
     try {
-        const data = createTeacher(req.body);
+        const data = await createTeacher(req.body);
 
         res.status(201).json({
             status: "success",

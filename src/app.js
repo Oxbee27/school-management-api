@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 
+const env = require("./config/env");
+
 const logger = require("./middleware/logger");
 const errorHandler = require("./middleware/errorHandler");
 
@@ -18,7 +20,7 @@ app.use(helmet());
 
 app.use(
     cors({
-        origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+        origin: env.CORS_ORIGIN,
         methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type", "Authorization"]
     })

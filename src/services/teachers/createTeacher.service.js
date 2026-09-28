@@ -1,41 +1,30 @@
 const teachers = require("../../database/teachers");
 const users = require("../../database/users");
+const hashPassword = require("../../utils/hashPassword");
 const ApiError = require("../../utils/apiError");
+const ROLES = require("../../constants/roles");
 
-const createTeacher = (teacherData) => {
+const createTeacher = async (teacherData) => {
     const {
-        userId,
-        staffNumber,
         firstName,
         lastName,
+        email,
+        password,
+        staffNumber,
         qualification,
         department
     } = teacherData;
 
-    const user = users.find(
-        user => user.id === userId
+    const normalizedEmail = email.toLowerCase();
+
+    const existingUser = users.find(
+        user =>
+            user.email &&
+            user.email.toLowerCase() === normalizedEmail
     );
 
-    if (!user) {
-        throw new ApiError(404, "User not found");
-    }
-
-    if (user.role !== "teacher") {
-        throw new ApiError(
-            400,
-            "Only users with the teacher role can have a teacher profile"
-        );
-    }
-
-    const existingProfile = teachers.find(
-        teacher => teacher.userId === userId
-    );
-
-    if (existingProfile) {
-        throw new ApiError(
-            409,
-            "Teacher profile already exists for this user"
-        );
+    if (existingUser) {
+        throw new ApiError(409, "Email is already registered");
     }
 
     const existingStaffNumber = teachers.find(
@@ -46,9 +35,22 @@ const createTeacher = (teacherData) => {
         throw new ApiError(409, "Staff number already exists");
     }
 
+    const hashedPassword = await hashPassword(password);
+
+    const user = {
+        id: String(users.length + 1),
+        name: `${firstName} ${lastName}`,
+        email: normalizedEmail,
+        password: hashedPassword,
+        role: ROLES.TEACHER,
+        createdAt: new Date().toISOString()
+    };
+
+    users.push(user);
+
     const teacher = {
         id: String(teachers.length + 1),
-        userId,
+        userId: user.id,
         staffNumber,
         firstName,
         lastName,
@@ -60,7 +62,23 @@ const createTeacher = (teacherData) => {
 
     teachers.push(teacher);
 
-    return teacher;
+    return {
+        id: teacher.id,
+        userId: teacher.userId,
+        staffNumber: teacher.staffNumber,
+        firstName: teacher.firstName,
+        lastName: teacher.lastName,
+        qualification: teacher.qualification,
+        department: teacher.department,
+        createdAt: teacher.createdAt,
+        updatedAt: teacher.updatedAt,
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role
+        }
+    };
 };
 
 module.exports = createTeacher;

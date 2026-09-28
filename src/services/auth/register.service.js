@@ -5,8 +5,10 @@ const ApiError = require("../../utils/apiError");
 
 const registerUser = async ({ name, email, password }) => {
 
+    const normalizedEmail = email.toLowerCase();
+
     const existingUser = users.find(
-        user => user.email.toLowerCase() === email.toLowerCase()
+        user => user.email && user.email.toLowerCase() === normalizedEmail
     );
 
     if (existingUser) {
@@ -18,7 +20,7 @@ const registerUser = async ({ name, email, password }) => {
     const user = {
         id: String(users.length + 1),
         name,
-        email: email.toLowerCase(),
+        email: normalizedEmail,
         password: hashedPassword,
         role: ROLES.STUDENT,
         createdAt: new Date().toISOString()

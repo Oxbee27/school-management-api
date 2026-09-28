@@ -1,12 +1,12 @@
-const createClass = require("../../services/classes/createClass.service");
+const createTeacher = require("../../services/teachers/createTeacher.service");
 
-const createClassController = async (req, res, next) => {
+const createTeacherController = async (req, res, next) => {
     try {
-        const data = createClass(req.body);
+        const data = await createTeacher(req.body);
 
         res.status(201).json({
             status: "success",
-            message: "Class created successfully",
+            message: "Teacher created successfully",
             data
         });
     } catch (error) {
@@ -14,4 +14,4 @@ const createClassController = async (req, res, next) => {
     }
 };
 
-module.exports = createClassController;
+module.exports = createTeacherController;

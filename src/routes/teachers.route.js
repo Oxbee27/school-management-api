@@ -17,14 +17,41 @@ const {
     updateTeacherSchema
 } = require("../validators/teacher.validator");
 
-router.post("/", auth, authorize("admin"), validate(createTeacherSchema), createTeacher);
+router.post(
+    "/",
+    auth,
+    authorize("admin"),
+    validate(createTeacherSchema),
+    createTeacher
+);
 
-router.get("/", auth, authorize("admin", "teacher"), getTeachers);
+router.get(
+    "/",
+    auth,
+    authorize("admin", "teacher"),
+    getTeachers
+);
 
-router.get("/:id", auth, authorize("admin", "teacher"), getTeacherById);
+router.get(
+    "/:id",
+    auth,
+    authorize("admin", "teacher"),
+    getTeacherById
+);
 
-router.patch("/:id", auth, authorize("admin"), validate(updateTeacherSchema), updateTeacher);
+router.patch(
+    "/:id",
+    auth,
+    authorize("admin"),
+    validate(updateTeacherSchema),
+    updateTeacher
+);
 
-router.delete("/:id", auth, authorize("admin"), deleteTeacher);
+router.delete(
+    "/:id",
+    auth,
+    authorize("admin"),
+    deleteTeacher
+);
 
 module.exports = router;
