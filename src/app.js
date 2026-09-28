@@ -14,8 +14,6 @@ const teachersRoutes = require("./routes/teachers.route");
 
 const app = express();
 
-
-
 app.use(helmet());
 
 app.use(
@@ -26,9 +24,7 @@ app.use(
     })
 );
 
-
 app.use(express.json());
-
 
 app.use(logger);
 

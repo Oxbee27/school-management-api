@@ -1,4 +1,4 @@
-const students = require("../../data/students");
+const students = require("../../database/students");
 const ApiError = require("../../utils/apiError");
 
 const deleteStudent = (studentId) => {

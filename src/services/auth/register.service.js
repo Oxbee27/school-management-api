@@ -1,4 +1,4 @@
-const users = require("../../data/users");
+const users = require("../../database/users");
 const ROLES = require("../../constants/roles");
 const hashPassword = require("../../utils/hashPassword");
 const ApiError = require("../../utils/apiError");

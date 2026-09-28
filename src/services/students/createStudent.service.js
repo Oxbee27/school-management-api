@@ -1,5 +1,5 @@
-const students = require("../../data/students");
-const users = require("../../data/users");
+const students = require("../../database/students");
+const users = require("../../database/users");
 const ApiError = require("../../utils/apiError");
 
 const createStudent = (studentData) => {

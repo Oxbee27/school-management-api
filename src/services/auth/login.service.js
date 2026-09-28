@@ -1,4 +1,4 @@
-const users = require("../../data/users");
+const users = require("../../database/users");
 const comparePassword = require("../../utils/comparePassword");
 const generateToken = require("../../utils/generateToken");
 const ApiError = require("../../utils/apiError");

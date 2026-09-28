@@ -4,56 +4,27 @@ const router = express.Router();
 
 const auth = require("../middleware/auth");
 const authorize = require("../middleware/authorize");
+const validate = require("../middleware/validate");
 
-const createStudent = require("../controllers/students/createStudent.controller");
-const getStudents = require("../controllers/students/getStudents.controller");
-const getStudentById = require("../controllers/students/getStudentById.controller");
-const updateStudent = require("../controllers/students/updateStudent.controller");
-const deleteStudent = require("../controllers/students/deleteStudent.controller");
+const createSubject = require("../controllers/subjects/createSubject.controller");
+const getSubjects = require("../controllers/subjects/getSubjects.controller");
+const getSubjectById = require("../controllers/subjects/getSubjectById.controller");
+const updateSubject = require("../controllers/subjects/updateSubject.controller");
+const deleteSubject = require("../controllers/subjects/deleteSubject.controller");
 
+const {
+    createSubjectSchema,
+    updateSubjectSchema
+} = require("../validators/subject.validator");
 
-// CREATE
-router.post(
-    "/",
-    auth,
-    authorize("admin"),
-    createStudent
-);
+router.post("/", auth, authorize("admin"), validate(createSubjectSchema), createSubject);
 
+router.get("/", auth, authorize("admin", "teacher", "student"), getSubjects);
 
-// GET ALL
-router.get(
-    "/",
-    auth,
-    authorize("admin", "teacher"),
-    getStudents
-);
+router.get("/:id", auth, authorize("admin", "teacher", "student"), getSubjectById);
 
+router.patch("/:id", auth, authorize("admin"), validate(updateSubjectSchema), updateSubject);
 
-// GET BY ID
-router.get(
-    "/:id",
-    auth,
-    authorize("admin", "teacher", "student"),
-    getStudentById
-);
-
-
-// UPDATE
-router.patch(
-    "/:id",
-    auth,
-    authorize("admin", "student"),
-    updateStudent
-);
-
-
-// DELETE
-router.delete(
-    "/:id",
-    auth,
-    authorize("admin"),
-    deleteStudent
-);
+router.delete("/:id", auth, authorize("admin"), deleteSubject);
 
 module.exports = router;
