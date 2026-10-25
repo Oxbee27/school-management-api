@@ -4,6 +4,8 @@ const router = express.Router();
 
 const auth = require("../middleware/auth");
 const authorize = require("../middleware/authorize");
+const validate = require("../middleware/validate");
+const { createStudentSchema } = require("../validators/student.validator");
 
 const createStudent = require("../controllers/students/createStudent.controller");
 const getStudents = require("../controllers/students/getStudents.controller");
@@ -11,46 +13,26 @@ const getStudentById = require("../controllers/students/getStudentById.controlle
 const updateStudent = require("../controllers/students/updateStudent.controller");
 const deleteStudent = require("../controllers/students/deleteStudent.controller");
 
-
-
 router.post(
-    "/",
-    auth,
-    authorize("admin"),
-    createStudent
+  "/",
+  auth,
+  authorize("admin"),
+  validate(createStudentSchema),
+  createStudent,
 );
 
+router.get("/", auth, authorize("admin", "teacher"), getStudents);
 
 router.get(
-    "/",
-    auth,
-    authorize("admin", "teacher"),
-    getStudents
+  "/:id",
+  auth,
+  authorize("admin", "teacher", "student"),
+  getStudentById,
 );
-
-
-router.get(
-    "/:id",
-    auth,
-    authorize("admin", "teacher", "student"),
-    getStudentById
-);
-
 
 // UPDATE
-router.patch(
-    "/:id",
-    auth,
-    authorize("admin", "student"),
-    updateStudent
-);
+router.patch("/:id", auth, authorize("admin", "student"), updateStudent);
 
-
-router.delete(
-    "/:id",
-    auth,
-    authorize("admin"),
-    deleteStudent
-);
+router.delete("/:id", auth, authorize("admin"), deleteStudent);
 
 module.exports = router;

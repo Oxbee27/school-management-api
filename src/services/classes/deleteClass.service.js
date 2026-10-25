@@ -1,17 +1,28 @@
-const classes = require("../../database/classes");
+const pool = require("../../config/database");
+const ApiError = require("../../utils/apiError");
 
-const deleteClass = (classId) => {
-    const index = classes.findIndex(
-        classItem => classItem.id === Number(classId)
-    );
+const deleteClass = async (classId) => {
+  const normalizedId = Number(classId);
 
-    if (index === -1) {
-        throw new Error("Class not found");
-    }
+  if (!Number.isSafeInteger(normalizedId) || normalizedId <= 0) {
+    throw new ApiError(400, "Invalid class ID");
+  }
 
-    const deletedClass = classes.splice(index, 1)[0];
+  const result = await pool.query(
+    `DELETE FROM public.classes
+         WHERE id = $1
+         RETURNING
+             id,
+             class_name AS name,
+             description`,
+    [normalizedId],
+  );
 
-    return deletedClass;
+  if (result.rows.length === 0) {
+    throw new ApiError(404, "Class not found");
+  }
+
+  return result.rows[0];
 };
 
 module.exports = deleteClass;

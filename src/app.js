@@ -3,7 +3,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 const env = require("./config/env");
-
+const pool = require("./config/database");
 const logger = require("./middleware/logger");
 const errorHandler = require("./middleware/errorHandler");
 
@@ -25,6 +25,27 @@ app.use(
         allowedHeaders: ["Content-Type", "Authorization"]
     })
 );
+
+app.get("/health/db", async (req, res) => {
+    try {
+        const result = await pool.query(
+            "SELECT current_database() AS database, NOW() AS server_time"
+        );
+
+        res.status(200).json({
+            status: "success",
+            message: "PostgreSQL connection is working",
+            data: result.rows[0]
+        });
+    } catch (error) {
+        console.error("Database health check failed:", error.message);
+
+        res.status(503).json({
+            status: "error",
+            message: "Database connection failed"
+        });
+    }
+});
 
 app.use(express.json());
 

@@ -1,7 +1,20 @@
-const results = require("../../database/results");
+const pool = require("../../config/database");
 
-const getResults = () => {
-    return results;
+const getResults = async () => {
+  const result = await pool.query(
+    `SELECT
+            id,
+            student_id AS "studentId",
+            subject_id AS "subjectId",
+            score,
+            grade,
+            term,
+            session
+         FROM public.results
+         ORDER BY id ASC`,
+  );
+
+  return result.rows;
 };
 
 module.exports = getResults;

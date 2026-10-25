@@ -1,16 +1,16 @@
 const getTeachers = require("../../services/teachers/getTeachers.service");
 
 const getTeachersController = async (req, res, next) => {
-    try {
-        const data = getTeachers();
+  try {
+    const data = await getTeachers();
 
-        res.status(200).json({
-            status: "success",
-            data
-        });
-    } catch (error) {
-        next(error);
-    }
+    res.status(200).json({
+      status: "success",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = getTeachersController;

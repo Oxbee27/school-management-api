@@ -1,0 +1,18 @@
+                                      Table "public.users"
+   Column   |            Type             | Collation | Nullable |           Default            
+------------+-----------------------------+-----------+----------+------------------------------
+ id         | integer                     |           | not null | generated always as identity
+ name       | character varying(201)      |           | not null | 
+ email      | character varying(255)      |           | not null | 
+ password   | character varying(255)      |           | not null | 
+ role       | character varying(20)       |           | not null | 
+ created_at | timestamp without time zone |           | not null | CURRENT_TIMESTAMP
+Indexes:
+    "users_pkey" PRIMARY KEY, btree (id)
+    "users_email_key" UNIQUE CONSTRAINT, btree (email)
+Check constraints:
+    "users_role_check" CHECK (role::text = ANY (ARRAY['admin'::character varying, 'teacher'::character varying, 'student'::character varying]::text[]))
+Referenced by:
+    TABLE "students" CONSTRAINT "students_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT
+    TABLE "teachers" CONSTRAINT "teachers_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT
+

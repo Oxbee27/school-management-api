@@ -1,18 +1,35 @@
-const students = require("../../database/students");
+const pool = require("../../config/database");
 const ApiError = require("../../utils/apiError");
 
-const deleteStudent = (studentId) => {
-    const studentIndex = students.findIndex(
-        student => student.id === studentId
-    );
+const deleteStudent = async (studentId) => {
+  const normalizedId = Number(studentId);
 
-    if (studentIndex === -1) {
-        throw new ApiError(404, "Student not found");
-    }
+  if (!Number.isSafeInteger(normalizedId) || normalizedId <= 0) {
+    throw new ApiError(404, "Student not found");
+  }
 
-    const deletedStudent = students.splice(studentIndex, 1);
+  const result = await pool.query(
+    `DELETE FROM public.students
+         WHERE id = $1
+         RETURNING
+            id,
+            user_id AS "userId",
+            admission_number AS "admissionNumber",
+            first_name AS "firstName",
+            last_name AS "lastName",
+            date_of_birth AS "dateOfBirth",
+            gender,
+            class_name AS "className",
+            created_at AS "createdAt",
+            updated_at AS "updatedAt"`,
+    [normalizedId],
+  );
 
-    return deletedStudent[0];
+  if (result.rows.length === 0) {
+    throw new ApiError(404, "Student not found");
+  }
+
+  return result.rows[0];
 };
 
 module.exports = deleteStudent;

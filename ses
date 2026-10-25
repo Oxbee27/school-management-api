@@ -1,0 +1,9 @@
+                                  Table "public.classes"
+   Column   |         Type          | Collation | Nullable |           Default            
+------------+-----------------------+-----------+----------+------------------------------
+ id         | bigint                |           | not null | generated always as identity
+ class_name | character varying(50) |           | not null | 
+Indexes:
+    "classes_pkey" PRIMARY KEY, btree (id)
+    "classes_class_name_key" UNIQUE CONSTRAINT, btree (class_name)
+

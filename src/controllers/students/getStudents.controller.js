@@ -1,8 +1,9 @@
+
 const getStudentsService = require("../../services/students/getStudents.service");
 
-const getStudents = (req, res, next) => {
+const getStudents = async (req, res, next) => {
     try {
-        const students = getStudentsService();
+        const students = await getStudentsService();
 
         res.status(200).json({
             status: "success",

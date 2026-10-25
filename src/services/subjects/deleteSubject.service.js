@@ -1,16 +1,30 @@
-const subjects = require("../../database/subjects");
+const pool = require("../../config/database");
 const ApiError = require("../../utils/apiError");
 
-const deleteSubject = (subjectId) => {
-    const index = subjects.findIndex(
-        subject => subject.id === String(subjectId)
-    );
+const deleteSubject = async (subjectId) => {
+  const normalizedId = Number(subjectId);
 
-    if (index === -1) {
-        throw new ApiError(404, "Subject not found");
-    }
+  if (!Number.isSafeInteger(normalizedId) || normalizedId <= 0) {
+    throw new ApiError(400, "Invalid subject ID");
+  }
 
-    return subjects.splice(index, 1)[0];
+  const result = await pool.query(
+    `DELETE FROM public.subjects
+         WHERE id = $1
+         RETURNING
+            id,
+            subject_name AS name,
+            subject_code AS code,
+            description,
+            class_id AS "classId"`,
+    [normalizedId],
+  );
+
+  if (result.rows.length === 0) {
+    throw new ApiError(404, "Subject not found");
+  }
+
+  return result.rows[0];
 };
 
 module.exports = deleteSubject;
