@@ -5,13 +5,13 @@
 -- ============================================
 
 -- 1. USERS: accounts for admins, teachers, students
-CREATE TABLE IF NOT EXISTS public.users (
+-- Create students table if it does not already exist.
+-- Existing student tables and records are preserved.
+CREATE TABLE IF NOT EXISTS public.students (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    name VARCHAR(201) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    role VARCHAR(20) NOT NULL
-        CHECK (role IN ('admin', 'teacher', 'student')),
+    admission_number VARCHAR(50) NOT NULL UNIQUE,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

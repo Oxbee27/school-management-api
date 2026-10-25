@@ -16,7 +16,7 @@ const startServer = async () => {
         await seedAdmin();
 
         // 3. Start the Express server.
-        const server = app.listen(PORT, () => {
+        const server = app.listen(PORT, "0.0.0.0", () => {
             console.log(`Server is running on port ${PORT}`);
         });
 
